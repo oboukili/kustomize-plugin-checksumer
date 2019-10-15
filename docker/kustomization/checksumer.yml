@@ -1,0 +1,14 @@
+---
+apiVersion: gitlab.com/maltcommunity
+kind: Checksumer
+metadata:
+  name: myTransformer
+files:
+  arbitraryKey: path/to/file
+  anotherArbitraryKey: path/to/folder
+# Where the above keys will be inserted in the resulting transformed resources
+fieldSpecs:
+  - path: metadata/annotations
+    create: true
+  - path: spec/template/metadata/annotations
+    create: true

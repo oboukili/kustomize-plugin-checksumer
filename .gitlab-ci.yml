@@ -1,0 +1,23 @@
+---
+default:
+  image:
+    name: gcr.io/kaniko-project/executor:debug-v0.10.0
+    entrypoint: [""]
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - >
+      /kaniko/executor \
+        --verbosity error \
+        --context ${CI_PROJECT_DIR} \
+        --destination ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} \
+        --destination ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  after_script:
+    - shred -u /kaniko/.docker/config.json
+  tags:
+    - docker
