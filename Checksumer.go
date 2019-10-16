@@ -81,8 +81,7 @@ func SHA1FileChecksum(f interface{}) (sig string, err error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), err
 }
 
-func (p *plugin) Config(
-	ldr ifc.Loader, rf *resmap.Factory, c []byte) (err error) {
+func (p *plugin) Config(ldr ifc.Loader, rf *resmap.Factory, c []byte) (err error) {
 	p.Files = nil
 	p.FieldSpecs = nil
 	return yaml.Unmarshal(c, p)
