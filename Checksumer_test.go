@@ -179,8 +179,8 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    directory: da39a3ee5e6b4b0d3255bfef95601890afd80709
-    directoryRecursive: ce7e7433d01958435676caaf907bb636c6804986
+    directory: 7567aa21664edd14a9eeac26efd9c07a7eed914e
+    directoryRecursive: 01cbe21c720fb38989f494dfcc3c4635c156bc04
     file: 5f5513f8822fdbe5145af33b64d8d970dcf95c6e
   name: myService
 spec:

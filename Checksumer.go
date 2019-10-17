@@ -43,36 +43,45 @@ func GetFileSpecSignature(fileSpec FileSpec) (sig string, err error) {
 	}
 	switch t := i.IsDir(); t {
 	case true:
-		if fileSpec.Recurse {
-			sigs := make([]string, 0)
-			files, err := ioutil.ReadDir(fileSpec.Path)
-			if err != nil {
-				return "", err
+		sigs := make([]string, 0)
+
+		files, err := ioutil.ReadDir(fileSpec.Path)
+		if err != nil {
+			return "", err
+		}
+		for _, f := range files {
+			filePath := fileSpec.Path + "/" + f.Name()
+			// TODO: make that a FileSpec field parameter
+			// ignore hidden files such as git ignore files, etc
+			if strings.HasPrefix(f.Name(), ".") {
+				continue
 			}
-			for _, f := range files {
-				// TODO: make that a FileSpec field parameter
-				// ignore hidden files such as git ignore files, etc
-				if strings.HasPrefix(f.Name(), ".") {
-					continue
-				}
+			if f.IsDir() && fileSpec.Recurse {
 				s, err := GetFileSpecSignature(FileSpec{
-					Path:    fileSpec.Path + "/" + f.Name(),
+					Path:    filePath,
 					Recurse: fileSpec.Recurse,
 				})
 				if err != nil {
 					return "", err
 				}
-				sigs = append(sigs, s)
+				b = []byte(s)
 			}
-			b = []byte(strings.Join(sigs[:], ""))
+			if !f.IsDir() {
+				b, err = ioutil.ReadFile(filePath)
+			}
+			if err != nil {
+				return "", err
+			}
+			sigs = append(sigs, SHA1Sum(b))
 		}
+		b = []byte(strings.Join(sigs[:], ""))
 	case false:
 		b, err = ioutil.ReadFile(fileSpec.Path)
 		if err != nil {
 			return "", err
 		}
 	}
-	return SHA1Sum(b), nil
+	return SHA1Sum(b), err
 }
 
 func SHA1Sum(b []byte) string {
