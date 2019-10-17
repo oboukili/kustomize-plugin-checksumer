@@ -4,6 +4,10 @@ Kustomize transformer plugin that will calculate a unique sha1 checksum of a fil
 Useful when tracking a specific version of a non Kubernetes resource represented by (an) external file(s),
 such as an external app configuration server state.
 
+### Roadmap:
+
+* Support for IgnoredFilePrefix attribute within FileSpec
+
 ### Requirements:
 
 * Go 1.12
@@ -53,8 +57,14 @@ such as an external app configuration server state.
     metadata:
       name: myTransformer
     files:
-      arbitraryKey: path/to/file
-      anotherArbitraryKey: path/to/folder
+      - key: arbitraryKey
+        path: path/to/file
+      - key: anotherArbitraryKey
+        path: path/to/folder
+        # Only applicable on folders, when true, will also take into account
+        # all files present in subdirs to calculate a unique sha1 sum
+        # (default to false)  
+        recurse: true
     # Where the above keys will be inserted in the resulting transformed resources
     fieldSpecs:
       - path: metadata/annotations

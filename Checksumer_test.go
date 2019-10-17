@@ -124,7 +124,7 @@ func createFileWithinTestEnv(path string, content string) error {
 
 func TestTransformer(t *testing.T) {
 	tc := NewEnvForTest(t).Set()
-	//defer tc.Reset()
+	defer tc.Reset()
 	kustomizeRootPath := tc.workDir + "/app"
 
 	err := os.MkdirAll(kustomizeRootPath, os.FileMode(int(0750)))
@@ -143,15 +143,24 @@ func TestTransformer(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
+	err = createFileWithinTestEnv(kustomizeRootPath+"/../test/sub/foo", "foo")
+	if err != nil {
+		panic(err)
+	}
 	rm := th.LoadAndRunTransformer(`
 apiVersion: gitlab.com/maltcommunity
 kind: Checksumer
 metadata:
   name: notImportantHere
 files:
-  sha1DirectorySignature: ../test
-  sha1FileSignature: ../test/foobarbaz
+  - key: directory
+    path: ../test
+    recurse: false
+  - key: directoryRecursive
+    path: ../test
+    recurse: true
+  - key: file
+    path: ../test/foobarbaz
 fieldSpecs:
   - path: metadata/annotations
     create: true
@@ -170,8 +179,9 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    sha1DirectorySignature: 983babaa26198dbf060b4f52e3c85b3b456b8b91
-    sha1FileSignature: 5f5513f8822fdbe5145af33b64d8d970dcf95c6e
+    directory: da39a3ee5e6b4b0d3255bfef95601890afd80709
+    directoryRecursive: ce7e7433d01958435676caaf907bb636c6804986
+    file: 5f5513f8822fdbe5145af33b64d8d970dcf95c6e
   name: myService
 spec:
   ports:

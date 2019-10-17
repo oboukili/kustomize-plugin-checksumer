@@ -5,8 +5,13 @@ metadata:
   name: myTransformer
 name: foobarbaz
 files:
-  fileChecksum: ../unit/foo
-  directoryChecksum: ../unit/bar
+  - key: file
+    path: ../unit/foo
+  - key: directory
+    path: ../unit/bar
+  - key: directoryRecursive
+    path: ../unit/bar
+    recurse: true
 # Where the above keys will be inserted in the resulting transformed resources
 fieldSpecs:
   - path: metadata/annotations
