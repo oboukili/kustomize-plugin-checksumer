@@ -4,11 +4,6 @@ Kustomize transformer plugin that will calculate a unique sha1 checksum of a fil
 Useful when tracking a specific version of a non Kubernetes resource represented by (an) external file(s),
 such as an external app configuration server state.
 
-
-### Roadmap:
-
-* Better integration tests for directories (need help with KustHarness test framework)
-
 ### Requirements:
 
 * Go 1.12
