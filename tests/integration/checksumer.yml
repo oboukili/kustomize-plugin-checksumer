@@ -5,8 +5,6 @@ metadata:
   name: myTransformer
 name: foobarbaz
 files:
-  # HELP WANTED: relative paths are relative to the Kustomize execution path,
-  # not the transformer yaml definition path :(
   fileChecksum: ../unit/foo
   directoryChecksum: ../unit/bar
 # Where the above keys will be inserted in the resulting transformed resources

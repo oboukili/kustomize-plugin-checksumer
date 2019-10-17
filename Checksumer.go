@@ -16,6 +16,7 @@ import (
 type plugin struct {
 	Files      map[string]string  `json:"files,omitempty" yaml:"files,omitempty"`
 	FieldSpecs []config.FieldSpec `json:"fieldSpecs,omitempty" yaml:"fieldSpecs,omitempty"`
+	Loader     *ifc.Loader
 }
 
 var KustomizePlugin plugin
@@ -84,19 +85,23 @@ func SHA1FileChecksum(f interface{}) (sig string, err error) {
 func (p *plugin) Config(ldr ifc.Loader, rf *resmap.Factory, c []byte) (err error) {
 	p.Files = nil
 	p.FieldSpecs = nil
+	p.Loader = &ldr
 	return yaml.Unmarshal(c, p)
 }
 
 func (p *plugin) Transform(m resmap.ResMap) error {
 	var sig string
+	ldr := *p.Loader
+
 	for k, v := range p.Files {
-		// Directory of file determination
-		i, err := os.Stat(v)
+		filePath := ldr.Root() + "/" + v
+		// Directory or file determination
+		i, err := os.Stat(filePath)
 		if err != nil {
 			return err
 		}
 		if i.IsDir() {
-			files, err := GetFilesFromDirectory(v)
+			files, err := GetFilesFromDirectory(filePath)
 			if err != nil {
 				return err
 			}
@@ -113,7 +118,7 @@ func (p *plugin) Transform(m resmap.ResMap) error {
 			h.Write(sigs)
 			sig = fmt.Sprintf("%x", h.Sum(nil))
 		} else {
-			sig, err = SHA1FileChecksum(v)
+			sig, err = SHA1FileChecksum(filePath)
 			if err != nil {
 				return err
 			}
