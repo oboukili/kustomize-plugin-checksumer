@@ -135,11 +135,11 @@ func TestTransformer(t *testing.T) {
 
 	th := kusttest_test.NewKustTestHarnessFull(t, kustomizeRootPath, loader.RestrictionNone, plugins.ActivePluginConfig())
 
-	err = createFileWithinTestEnv(kustomizeRootPath + "/../test/foobarbaz", "foobarbaz")
+	err = createFileWithinTestEnv(kustomizeRootPath+"/../test/foobarbaz", "foobarbaz")
 	if err != nil {
 		panic(err)
 	}
-	err = createFileWithinTestEnv(kustomizeRootPath + "/../test/bar", "bar")
+	err = createFileWithinTestEnv(kustomizeRootPath+"/../test/bar", "bar")
 	if err != nil {
 		panic(err)
 	}
