@@ -2,7 +2,6 @@ package main_test
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -123,27 +122,36 @@ func createFileWithinTestEnv(path string, content string) error {
 	return err
 }
 
-func TestChecksumerTransformer(t *testing.T) {
+func TestTransformer(t *testing.T) {
 	tc := NewEnvForTest(t).Set()
-	defer tc.Reset()
+	//defer tc.Reset()
+	kustomizeRootPath := tc.workDir + "/app"
+
+	err := os.MkdirAll(kustomizeRootPath, os.FileMode(int(0750)))
+	if err != nil {
+		panic(err)
+	}
 	tc.BuildGoPlugin("gitlab.com/maltcommunity", "", "Checksumer")
-	th := kusttest_test.NewKustTestHarnessFull(t, tc.workDir, loader.RestrictionNone, plugins.ActivePluginConfig())
-	err := createFileWithinTestEnv(tc.workDir + "/test/foo", "foobarbaz")
+
+	th := kusttest_test.NewKustTestHarnessFull(t, kustomizeRootPath, loader.RestrictionNone, plugins.ActivePluginConfig())
+
+	err = createFileWithinTestEnv(kustomizeRootPath + "/../test/foobarbaz", "foobarbaz")
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	err = createFileWithinTestEnv(tc.workDir + "/test/bar", "bar")
+	err = createFileWithinTestEnv(kustomizeRootPath + "/../test/bar", "bar")
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
+
 	rm := th.LoadAndRunTransformer(`
 apiVersion: gitlab.com/maltcommunity
 kind: Checksumer
 metadata:
   name: notImportantHere
 files:
-  sha1DirectorySignature: test
-  sha1FileSignature: test/foo
+  sha1DirectorySignature: ../test
+  sha1FileSignature: ../test/foobarbaz
 fieldSpecs:
   - path: metadata/annotations
     create: true
