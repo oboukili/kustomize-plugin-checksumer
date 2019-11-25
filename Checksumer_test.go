@@ -131,7 +131,7 @@ func TestTransformer(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	tc.BuildGoPlugin("gitlab.com/maltcommunity", "", "Checksumer")
+	tc.BuildGoPlugin("github.com/oboukili", "", "Checksumer")
 
 	th := kusttest_test.NewKustTestHarnessFull(t, kustomizeRootPath, loader.RestrictionNone, plugins.ActivePluginConfig())
 
@@ -148,7 +148,7 @@ func TestTransformer(t *testing.T) {
 		panic(err)
 	}
 	rm := th.LoadAndRunTransformer(`
-apiVersion: gitlab.com/maltcommunity
+apiVersion: github.com/oboukili
 kind: Checksumer
 metadata:
   name: notImportantHere

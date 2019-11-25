@@ -52,7 +52,7 @@ such as an external app configuration server state.
 
 * checksumer.yml
     ```
-    apiVersion: gitlab.com/maltcommunity
+    apiVersion: github.com/oboukili
     kind: Checksumer
     metadata:
       name: myTransformer
@@ -104,9 +104,9 @@ such as an external app configuration server state.
 ### Build
 
 ```
-mkdir -p $HOME/.config/kustomize/plugin/gitlab.com/maltcommunity
-cd $HOME/.config/kustomize/plugin/gitlab.com/maltcommunity
-git clone https://gitlab.com/maltcommunity/public/checksumer -o checksumer
+mkdir -p $HOME/.config/kustomize/plugin/github.com/oboukili
+cd $HOME/.config/kustomize/plugin/github.com/oboukili
+git clone https://github.com/oboukili/kustomize-plugin-checksumer -o checksumer
 cd checksumer
 go build -buildmode plugin -o Checksumer.so Checksumer.go
 ```

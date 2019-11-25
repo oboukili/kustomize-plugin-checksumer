@@ -1,4 +1,4 @@
-module gitlab.com/maltcommunity/public/checksumer
+module github.com/oboukili/kustomize-plugin-checksumer
 
 go 1.12
 
