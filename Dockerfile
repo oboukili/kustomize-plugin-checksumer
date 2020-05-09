@@ -1,16 +1,13 @@
-FROM golang:1.12-alpine
+FROM golang:1.13
 
-RUN apk add --update --no-cache git gcc libc-dev
+#RUN apk add --update --no-cache git gcc libc-dev
 
-RUN GO111MODULE=on go get sigs.k8s.io/kustomize/v3/cmd/kustomize@v3.1.0
+RUN GO111MODULE=on go get -trimpath sigs.k8s.io/kustomize/kustomize/v3@v3.5.4
 RUN mkdir -p /root/.config/kustomize/plugin/github.com/oboukili
 COPY . /root/.config/kustomize/plugin/github.com/oboukili/checksumer
 
 RUN cd /root/.config/kustomize/plugin/github.com/oboukili/checksumer && \
-    go test
-
-RUN cd /root/.config/kustomize/plugin/github.com/oboukili/checksumer && \
-    GO111MODULE=on go build -buildmode plugin -o Checksumer.so Checksumer.go
+    GO111MODULE=on go build -trimpath -buildmode plugin -o Checksumer.so Checksumer.go
 
 RUN cd /root/.config/kustomize/plugin/github.com/oboukili/checksumer && \
     cd tests/integration && \

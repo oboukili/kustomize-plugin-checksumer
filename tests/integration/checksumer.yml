@@ -1,5 +1,5 @@
 ---
-apiVersion: gitlab.com/maltcommunity
+apiVersion: github.com/oboukili
 kind: Checksumer
 metadata:
   name: myTransformer

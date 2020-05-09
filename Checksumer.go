@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"sigs.k8s.io/kustomize/v3/pkg/ifc"
-	"sigs.k8s.io/kustomize/v3/pkg/resmap"
-	"sigs.k8s.io/kustomize/v3/pkg/transformers"
-	"sigs.k8s.io/kustomize/v3/pkg/transformers/config"
-	"sigs.k8s.io/yaml"
+	"sigs.k8s.io/kustomize/api/ifc"
+	"sigs.k8s.io/kustomize/api/resmap"
+	"sigs.k8s.io/kustomize/api/transform"
+	"sigs.k8s.io/kustomize/api/types"
+	"sigs.k8s.io/kustomize/kyaml/yaml"
 	"strings"
 )
 
@@ -22,7 +22,7 @@ type FileSpec struct {
 
 type plugin struct {
 	Files      []FileSpec         `json:"files,omitempty" yaml:"files,omitempty"`
-	FieldSpecs []config.FieldSpec `json:"fieldSpecs,omitempty" yaml:"fieldSpecs,omitempty"`
+	FieldSpecs []types.FieldSpec `json:"fieldSpecs,omitempty" yaml:"fieldSpecs,omitempty"`
 	loader     *ifc.Loader
 }
 
@@ -102,7 +102,7 @@ func (p *plugin) Transform(m resmap.ResMap) (err error) {
 			return err
 		}
 	}
-	t, err := transformers.NewMapTransformer(
+	t, err := transform.NewMapTransformer(
 		p.FieldSpecs,
 		computedKVs,
 	)
