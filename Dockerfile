@@ -7,7 +7,7 @@ RUN mkdir -p /root/.config/kustomize/plugin/github.com/oboukili
 COPY . /root/.config/kustomize/plugin/github.com/oboukili/checksumer
 
 RUN cd /root/.config/kustomize/plugin/github.com/oboukili/checksumer && \
-    GO111MODULE=on go build -trimpath -buildmode plugin -o Checksumer.so Checksumer.go
+    GO111MODULE=on go build -mod=readonly -trimpath -buildmode plugin -o Checksumer.so Checksumer.go
 
 RUN cd /root/.config/kustomize/plugin/github.com/oboukili/checksumer && \
     cd tests/integration && \
